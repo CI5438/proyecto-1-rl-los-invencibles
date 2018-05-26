@@ -8,6 +8,7 @@ Authors:
 """
 import math
 import sys
+import random
 
 theta = [0,0]
 features = []
@@ -82,7 +83,10 @@ def norm():
 
 def h(theta, x):
 	#print (float(theta[1])*float(x[1]))
-	return (theta[0] + theta[1]*x[1])
+	aux=0
+	for i in range(len(theta)):
+		aux+=theta[i]*x[i]
+	return aux
 
 def j(theta, x, y):
 	plus=0
@@ -104,9 +108,14 @@ def sub_vec(a,b):
 	return c
 
 def gradient_descent(alpha):
-	theta_old=[0,0]
-	theta_new=[10,10]
-	epsilon=10**-5
+	theta_old=[]
+	theta_new=[]
+	for i in range(len(x[0])):
+		theta_old.append(random.random()*100)
+		theta_new.append(random.random()*100)
+	#theta_old=[0,0]
+	#theta_new=[10,10]
+	epsilon=10**-1
 	k=0
 	#print(x[1][1]*x[1][0])
 	while(norm2(sub_vec(theta_new,theta_old))>epsilon): #condicion de convergencia
@@ -123,7 +132,9 @@ def gradient_descent(alpha):
 		k+=1
 		#print("theta old", theta_old[0], theta_old[1])
 		#print("theta new", theta_new[0], theta_new[1])
-	print(theta_new[0], theta_new[1], k)
+	for i in range(len(theta_new)):
+		print("Theta ", i, ": ", theta_new[i])
+	print("k: ", k)
 
 
 
