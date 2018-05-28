@@ -18,7 +18,8 @@ theta = [0,0]
 features = []
 x = []
 y = []
-jota=[]
+global jota
+jota = []
 columns = 0
 k = 0
 
@@ -59,11 +60,11 @@ def read_dataset(filename):
 				x.append(aux)
 				y.append(float(word[columns-1]))
 
-	for i in range(len(x)):	
-		for j in range (1,columns-1):
-			print(x[i][j], end=' ')
-		print(y[i])
-	print(" ")
+	# for i in range(len(x)):	
+	# 	for j in range (1,columns-1):
+	# 		print(x[i][j], end=' ')
+	# 	print(y[i])
+	# print(" ")
 
 """
 Description: normalizes the data.
@@ -117,7 +118,7 @@ Parameters:
 	@param x: values of dataset variable.
 	@param y: values of dataset variable.
 """
-def j(theta):
+def jfunc(theta):
 	plus=0
 	for i in range(0, len(x)):
 		plus += (h(theta, x[i]) - y[i])**2
@@ -159,16 +160,14 @@ Parameters:
 def gradient_descent(alpha):
 	theta_old=[]
 	theta_new=[]
+	epsilon=10**-3
+	k=0
 
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
 		theta_new.append(random.random()*100)
-	#theta_old=[0,0]
-	#theta_new=[10,10]
-	epsilon=10**-1
-	k=0
-	#print(x[1][1]*x[1][0])
-	jota.append(j(theta_new))
+
+	jota.append(jfunc(theta_new))
 	while(norm2(sub_vec(theta_new,theta_old))>epsilon): #condicion de convergencia
 		
 		for i in range(len(x[0])):
@@ -182,7 +181,7 @@ def gradient_descent(alpha):
 				#plus+=(h(theta_old, x[j])-y[j])
 			#print(alpha*(1/len(x))*plus)
 			theta_new[i]=theta_old[i]-(alpha*(1/len(x))*plus)
-		jota.append(j(theta_new))
+		jota.append(jfunc(theta_new))
 		k+=1
 		#print("theta old", theta_old[0], theta_old[1])
 		#print("theta new", theta_new[0], theta_new[1])
