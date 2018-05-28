@@ -53,47 +53,47 @@ def plotNormal(x,y,xlabel,ylabel,title, color):
 	plt.title(title)
 	plt.plot(x,y,c=color)
 
-# 2.1) ------------------------------------------------------------------------
+# # 2.1) ------------------------------------------------------------------------
 
 filename1 = "x01.txt"
 read_dataset(filename1)
 
-# Without normalized the data -------------------------------------------------
+# # Without normalized the data -------------------------------------------------
 
-# results1 = []
-# results1 = gradient_descent(0.001)
+results1 = []
+results1 = gradient_descent(0.001)
 
-# # # Question a) -----------------------------------------------------------------
+# # # # Question a) -----------------------------------------------------------------
 
-# iterations = np.arange(len(jota))
-# plotNormal(iterations, jota,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
-# plt.show()
+iterations = np.arange(len(jota))
+plotNormal(iterations, normV(jota),"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
+plt.show()
 
-# Normalized data -------------------------------------------------------------
+# # Normalized data -------------------------------------------------------------
 
 norm()
 results2 = []
 results2 = gradient_descent(0.001)
 
-# Question a) -----------------------------------------------------------------
+# # Question a) -----------------------------------------------------------------
 
-iterations = np.arange(len(jota))
+# iterations = np.arange(len(jota))
+
 plotNormal(iterations, jota,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
 plt.show()
 
-# Question b) -----------------------------------------------------------------
+# # Question b) -----------------------------------------------------------------
 
 x_1 = []
-y_1 = []
 
-for i in range(0, len(y)):
-	print(y[i])
+x_2 = [-1,7]
 
 for i in range(len(x)):
 	x_1.append(x[i][1])
-	y_1.append(results2[0] + results2[1]*x[i][1])
 
-plotScatter(x_1,y,"Brain Weight", "Body Weight", "Exercise 2.1.b", x_1,y_1)
+y_2=[results2[0]+results2[1]*-1,results2[0]+results2[1]*7]
+
+plotScatter(x_1,y,"Brain Weight", "Body Weight", "Exercise 2.1.b", x_2,y_2)
 
 # 2.2) ------------------------------------------------------------------------
 
@@ -101,6 +101,15 @@ filename2 = "x08.txt"
 read_dataset(filename2)
 
 # Question a) -----------------------------------------------------------------
+
+gradient_descent(0.001)
+iterations = np.arange(len(jota))
+
+for i in range(0,len(jota)):
+	print(jota[i])
+
+plotNormal(iterations, jota,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
+plt.show()
 
 # Question b) -----------------------------------------------------------------
 
@@ -120,5 +129,6 @@ legend2 = mpatches.Patch(color=colors[1],label=alphas[1])
 legend3 = mpatches.Patch(color=colors[2],label=alphas[2])
 legend4 = mpatches.Patch(color=colors[3],label=alphas[3])
 legend5 = mpatches.Patch(color=colors[4],label=alphas[4])
-plt.legend(handles=[legend1, legend2,legend3,legend4,legend5])
+legend6 = mpatches.Patch(color=colors[5],label=alphas[5])
+plt.legend(handles=[legend1, legend2,legend3,legend4,legend5,legend6])
 plt.show()

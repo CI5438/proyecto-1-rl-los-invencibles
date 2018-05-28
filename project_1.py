@@ -21,7 +21,7 @@ global jota
 jota = []
 columns = 0
 k = 0
-max_it=20000
+max_it=3
 
 """
 Description: gets information about dataset.
@@ -62,6 +62,7 @@ def read_dataset(filename):
 				x.append(aux)
 				y.append(float(word[columns-1]))
 
+	# Dataset
 	# for i in range(len(x)):	
 	# 	for j in range (1,columns-1):
 	# 		print(x[i][j], end=' ')
@@ -73,12 +74,20 @@ Description: normalizes the data.
 """
 def norm():
 	media=[1]
+	media_y=0
+	varianza_y=0
 	
 	for i in range(1,len(x[0])):
 		aux=0
 		for j in range(len(x)):
 			aux+=x[j][i]
 		media.append(aux/len(x))
+
+	aux=0
+	for j in range(len(y)):
+		aux+=y[j]
+	media_y=aux/len(y)
+
 	print("Media: ", media[1])
 	varianza=[1]
 	
@@ -88,12 +97,18 @@ def norm():
 			aux+=(x[j][i]-media[i])**2
 		varianza.append((aux/(len(x)-1))**(1/2))
 
+	aux=0
+	for j in range(len(y)):
+		aux+=(y[j]-media_y)**2
+	varianza_y=(aux/(len(y)-1))**(1/2)
+
 	print("varianza: ", varianza[1])
 	
 	for i in range(1,len(x[0])):
 		for j in range(len(x)):
 			x[j][i]=(x[j][i]-media[i])/varianza[i]
 
+	# Data normalized
 	# for i in range(len(x)):	
 	# 	#print(columns)
 	# 	for j in range (len(x[i])):
@@ -139,7 +154,6 @@ def norm2(x):
 	plus=0
 	for i in range (0, len(x)):
 		plus += x[i]**2
-	#print(math.sqrt(plus))
 	return math.sqrt(plus)
 
 """
@@ -166,45 +180,31 @@ def gradient_descent(alpha):
 	theta_new=[]
 	epsilon=10**-3
 	k=0
-	max_it = 10
 	del jota[:]
 
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
-		theta_new.append(random.random()*100)
+		theta_new.append(50)
 
 	jota.append(jfunc(theta_new))
-	while(norm2(sub_vec(theta_new,theta_old))>epsilon ): #condicion de convergencia
+	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
 		
 		for i in range(len(x[0])):
 			theta_old[i] = theta_new[i]
 			
 		for i in range (0, len(theta_old)):
 			plus=0
+			
 			for j in range (0, len(x)):
-				#print(x[j][i])
 				plus+=(h(theta_old, x[j])-y[j])*x[j][i]
-				#plus+=(h(theta_old, x[j])-y[j])
-			#print(alpha*(1/len(x))*plus)
 			theta_new[i]=theta_old[i]-(alpha*(1/len(x))*plus)
 		jota.append(jfunc(theta_new))
+		
 		k+=1
-		#print("theta old", theta_old[0], theta_old[1])
-		#print("theta new", theta_new[0], theta_new[1])
-
-	for i in range(len(theta_new)):
-		print("Theta ", i, ": ", theta_new[i])
+	
+	# Theta values and iterations
+	# for i in range(len(theta_new)):
+	# 	print("Theta ", i, ": ", theta_new[i])
 	print("k: ", k)
 
 	return theta_new
-
-# filename = "x01.txt"
-# read_dataset(filename)
-# norm()
-# theta_1 = gradient_descent(0.001)
-# for i in range (len(x)):
-# 	t.append(x[i][1])
-# plt.plot(t)
-# plt.ylabel('some numbers')
-# plt.show()
-
