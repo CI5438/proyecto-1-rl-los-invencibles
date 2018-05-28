@@ -3,7 +3,7 @@ Universidad Simon Bolivar
 Artificial Intelligence II - CI5438
 Authors:
 	David Cabeza 1310191
-	Rafael Blanco
+	Rafael Blanco 1310156
 	Fabiola Martinez 1310838
 
 Description: linear regression algorithm.
@@ -18,6 +18,7 @@ theta = [0,0]
 features = []
 x = []
 y = []
+jota=[]
 columns = 0
 k = 0
 
@@ -116,7 +117,7 @@ Parameters:
 	@param x: values of dataset variable.
 	@param y: values of dataset variable.
 """
-def j(theta, x, y):
+def j(theta):
 	plus=0
 	for i in range(0, len(x)):
 		plus += (h(theta, x[i]) - y[i])**2
@@ -167,6 +168,7 @@ def gradient_descent(alpha):
 	epsilon=10**-1
 	k=0
 	#print(x[1][1]*x[1][0])
+	jota.append(j(theta_new))
 	while(norm2(sub_vec(theta_new,theta_old))>epsilon): #condicion de convergencia
 		
 		for i in range(len(x[0])):
@@ -180,6 +182,7 @@ def gradient_descent(alpha):
 				#plus+=(h(theta_old, x[j])-y[j])
 			#print(alpha*(1/len(x))*plus)
 			theta_new[i]=theta_old[i]-(alpha*(1/len(x))*plus)
+		jota.append(j(theta_new))
 		k+=1
 		#print("theta old", theta_old[0], theta_old[1])
 		#print("theta new", theta_new[0], theta_new[1])
