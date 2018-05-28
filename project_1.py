@@ -22,6 +22,7 @@ global jota
 jota = []
 columns = 0
 k = 0
+max_it=20000
 
 """
 Description: gets information about dataset.
@@ -30,6 +31,8 @@ Parameters:
 	@param filename: name of de dataset file.
 """
 def read_dataset(filename):
+	del x[:]
+	del y[:]
 	dataset = open(filename, "r")
 
 	i=0
@@ -164,13 +167,14 @@ def gradient_descent(alpha):
 	theta_new=[]
 	epsilon=10**-3
 	k=0
+	del jota[:]
 
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
 		theta_new.append(random.random()*100)
 
 	jota.append(jfunc(theta_new))
-	while(norm2(sub_vec(theta_new,theta_old))>epsilon): #condicion de convergencia
+	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
 		
 		for i in range(len(x[0])):
 			theta_old[i] = theta_new[i]
