@@ -71,6 +71,7 @@ Description: normalizes the data.
 """
 def norm():
 	media=[1]
+	
 	for i in range(1,len(x[0])):
 		aux=0
 		for j in range(len(x)):
@@ -78,6 +79,7 @@ def norm():
 		media.append(aux/len(x))
 	print("Media: ", media[1])
 	varianza=[1]
+	
 	for i in range(1,len(x[0])):
 		aux=0
 		for j in range(len(x)):
@@ -85,6 +87,7 @@ def norm():
 		varianza.append((aux/(len(x)-1))**(1/2))
 
 	print("varianza: ", varianza[1])
+	
 	for i in range(1,len(x[0])):
 		for j in range(len(x)):
 			x[j][i]=(x[j][i]-media[i])/varianza[i]
@@ -97,7 +100,7 @@ def norm():
 	# print(" ")
 
 """
-Description: gets information about dataset.
+Description: calculates the derived cost function..
 
 Parameters:
 	@param theta: array with theta values.
@@ -151,11 +154,10 @@ def sub_vec(a,b):
 	return c
 
 """
-Description: subtracts two vectors.
+Description: gradient descent algorithm.
 
 Parameters:
-	@param a: a vector.
-	@param b: a vector.
+	@param alpha: learning rate.
 """
 def gradient_descent(alpha):
 	theta_old=[]
