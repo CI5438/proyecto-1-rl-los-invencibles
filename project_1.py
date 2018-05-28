@@ -9,10 +9,9 @@ Authors:
 Description: linear regression algorithm.
 
 """
-import math
+import math # useful for mathematical operators
 import sys
-import random
-import matplotlib.pyplot as plt
+import random  # useful for random function
 
 theta = [0,0]
 features = []
@@ -167,6 +166,7 @@ def gradient_descent(alpha):
 	theta_new=[]
 	epsilon=10**-3
 	k=0
+	max_it = 10
 	del jota[:]
 
 	for i in range(len(x[0])):
@@ -174,7 +174,7 @@ def gradient_descent(alpha):
 		theta_new.append(random.random()*100)
 
 	jota.append(jfunc(theta_new))
-	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
+	while(norm2(sub_vec(theta_new,theta_old))>epsilon ): #condicion de convergencia
 		
 		for i in range(len(x[0])):
 			theta_old[i] = theta_new[i]
@@ -197,7 +197,6 @@ def gradient_descent(alpha):
 	print("k: ", k)
 
 	return theta_new
-
 
 # filename = "x01.txt"
 # read_dataset(filename)
