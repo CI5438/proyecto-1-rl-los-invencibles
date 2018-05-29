@@ -1,6 +1,11 @@
 import pandas as pd
 import sys
 
+def fix_missing_with_mode(df):
+    """Fixes missing value from all columns using the mode.
+    """
+    return df.fillna(df.mode().iloc[0])
+
 def only_rows_from_numeric_gte_column_value(df, column, value):
     """Remove from dataframe rows whose 'column' value is not >= 'value'
     """
@@ -51,9 +56,13 @@ def init():
     
     # a) Data cleaning
     df = only_rows_from_categorical_column_value(df, "Sale Condition", "Normal")
+    df = only_rows_from_numeric_gte_column_value(df, "Gr Liv Area", 1500)
+    
+    # other operations
     df = drop_column(df, 'PID')
     df = drop_column(df, 'Order')
-    df = only_rows_from_numeric_gte_column_value(df, "Gr Liv Area", 1500)
+    df = fix_missing_with_mode(df)
+
     # b) Normalization of data
     
     # c) Data splitting
