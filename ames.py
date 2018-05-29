@@ -12,6 +12,10 @@ def get_samples_DeCock(df, force=True):
     requirement being that the number of observations in the training set be six 
     to ten times the number of variables."
     
+    when force=True the training dataset lower limit is six times the number
+    of variables (included), when false, the lower limit is the number
+    of variables.
+
     NOTE: This function could be improved by relaxing the min_val_size within an 
     interval.
     """
@@ -112,7 +116,7 @@ def init():
     # b) Normalization of data 
     
     # c) Data splitting
-    # df_training, df_validation = get_samples(df)
+    df_training, df_validation = get_samples_DeCock(df)
 
     df = dummies(df)
 
