@@ -1,6 +1,52 @@
 import pandas as pd
 import sys
 
+def get_samples_DeCock(df, force=True):
+    """Return training and validation data samples using pandas's
+    random sampling and Dean De Cock suggested method.
+
+    De Cock states the following:
+
+    "The two data sets can be easily created by randomizing the original data 
+    and selecting the relevant proportion for each component with the only real
+    requirement being that the number of observations in the training set be six 
+    to ten times the number of variables."
+    
+    NOTE: This function could be improved by relaxing the min_val_size within an 
+    interval.
+    """
+    max_factor = 10
+    min_factor = 6
+
+    # calculate number of rows and columns
+    rows = len(df)
+    cols = len(df.columns)
+
+    # this algorithm begins trying with max factor and substracts one until
+    # it finds the mentioned proportion of training/validation data.
+    # Always makes sure validation data size is not less than 20% of the data.    
+    factor = max_factor
+    min_validation_size = round(rows/5)
+
+    if min_validation_size == 0:
+        # dont waste your time.
+        raise ValueError("Dataset too small.")
+
+    while (force and factor >= min_factor) or (factor > 0):
+        training_size = cols*factor
+        validation_size = rows - training_size
+        
+        if (training_size > rows) and (validation_size >= min_validation_size):
+            df_validation = df.sample(n=validation_size)
+            df_training = df.loc[df.index.difference(df_validation.index)]
+            return df_training, df_validation
+        else:
+            factor -= 1
+            continue
+    
+    raise ValueError("Dataset too small.")
+
+
 def fix_missing_with_mode(df):
     """Fixes missing value from all columns using the mode.
     """
@@ -63,7 +109,7 @@ def init():
     df = drop_column(df, 'Order')
     df = fix_missing_with_mode(df)
 
-    # b) Normalization of data
+    # b) Normalization of data 
     
     # c) Data splitting
     # df_training, df_validation = get_samples(df)
