@@ -116,11 +116,11 @@ def init():
     # with dummies, there will be more variables so the sets would need
     # to be extremely large.
     cols = len(df.columns)
-    
-    df = dummies(df)
 
     # c) Data splitting
     df_training, df_validation = get_samples_DeCock(df, cols)
+
+    df_training, df_validation = dummies(df_training), dummies(df_validation)
 
     # b) Data normalization
     df_training.to_csv("amstat_training.txt")
