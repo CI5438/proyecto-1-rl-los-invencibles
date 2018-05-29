@@ -41,7 +41,7 @@ def get_samples_DeCock(df, cols, force=True):
         
         if (validation_size >= min_validation_size):
             df_validation = df.sample(n=validation_size)
-            df_training = df.loc[df.index.difference(df_validation.index)]
+            df_training = df.sample(n=training_size)
             return df_training, df_validation
         else:
             factor -= 1
@@ -116,11 +116,11 @@ def init():
     # with dummies, there will be more variables so the sets would need
     # to be extremely large.
     cols = len(df.columns)
+    
+    df = dummies(df)
 
     # c) Data splitting
     df_training, df_validation = get_samples_DeCock(df, cols)
-
-    df_training, df_validation = dummies(df_training), dummies(df_validation)
 
     # b) Data normalization
     df_training.to_csv("amstat_training.txt")
