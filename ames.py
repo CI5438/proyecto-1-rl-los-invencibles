@@ -112,13 +112,23 @@ def init():
     df = drop_column(df, 'PID')
     df = drop_column(df, 'Order')
     df = fix_missing_with_mode(df)
+    df = dummies(df)
 
-    # b) Normalization of data 
+    # b) Data normalization 
     
     # c) Data splitting
     df_training, df_validation = get_samples_DeCock(df)
+    
+    # d) Model Assesing under training and validation data
 
-    df = dummies(df)
+    # criteria: bias -- average(yhat - y)
+
+    # criteria: maximun deviation -- max(|y-yhat|)
+
+    # criteria: mean absolute deviation -- average(|y-yhat|)
+
+    # criteria: mean square error -- average(y-yhat)^2
+
 
 if __name__ == '__main__':
     init()
