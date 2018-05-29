@@ -1,7 +1,7 @@
 import pandas as pd
 import sys
 
-def get_samples_DeCock(df, force=True):
+def get_samples_DeCock(df, cols, force=True):
     """Return training and validation data samples using pandas's
     random sampling and Dean De Cock suggested method.
 
@@ -22,9 +22,8 @@ def get_samples_DeCock(df, force=True):
     max_factor = 10
     min_factor = 6
 
-    # calculate number of rows and columns
+    # calculate number of rows
     rows = len(df)
-    cols = len(df.columns)
 
     # this algorithm begins trying with max factor and substracts one until
     # it finds the mentioned proportion of training/validation data.
@@ -40,7 +39,7 @@ def get_samples_DeCock(df, force=True):
         training_size = cols*factor
         validation_size = rows - training_size
         
-        if (training_size > rows) and (validation_size >= min_validation_size):
+        if (validation_size >= min_validation_size):
             df_validation = df.sample(n=validation_size)
             df_training = df.loc[df.index.difference(df_validation.index)]
             return df_training, df_validation
@@ -103,7 +102,7 @@ def read_file(filename):
 
 def init():
     df = read_file("ww2.amstat.org.txt")
-    
+
     # a) Data cleaning
     df = only_rows_from_categorical_column_value(df, "Sale Condition", "Normal")
     df = only_rows_from_numeric_gte_column_value(df, "Gr Liv Area", 1500)
@@ -112,12 +111,21 @@ def init():
     df = drop_column(df, 'PID')
     df = drop_column(df, 'Order')
     df = fix_missing_with_mode(df)
+
+    # calculate number of columns for sampling before getting dummies 
+    # with dummies, there will be more variables so the sets would need
+    # to be extremely large.
+    cols = len(df.columns)
+    
     df = dummies(df)
 
-    # b) Data normalization 
-    
     # c) Data splitting
-    df_training, df_validation = get_samples_DeCock(df)
+    df_training, df_validation = get_samples_DeCock(df, cols)
+
+    # b) Data normalization
+    df_training.to_csv("amstat_training.txt")
+    df_validation.to_csv("amstat_validation.txt")
+    
     
     # d) Model Assesing under training and validation data
 
