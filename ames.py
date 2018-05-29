@@ -1,6 +1,11 @@
 import pandas as pd
 import sys
 
+def only_rows_from_numeric_gte_column_value(df, column, value):
+    """Remove from dataframe rows whose 'column' value is not >= 'value'
+    """
+    return df.loc[df[column] >= value]
+
 def drop_column(df, column):
     """Drop from dataframe 'column'
     """
@@ -48,7 +53,7 @@ def init():
     df = only_rows_from_categorical_column_value(df, "Sale Condition", "Normal")
     df = drop_column(df, 'PID')
     df = drop_column(df, 'Order')
-
+    df = only_rows_from_numeric_gte_column_value(df, "Gr Liv Area", 1500)
     # b) Normalization of data
     
     # c) Data splitting
