@@ -16,7 +16,6 @@ import matplotlib.pyplot as plt
 from plots import plotNormal
 from project_1 import gradient_descent, h, sub_vec  # main file
 
-
 def get_samples_DeCock(df, cols, force=True):
     """
     Return training and validation data samples using pandas's
@@ -278,14 +277,15 @@ def init():
     # criteria: maximum deviation -- max(|y-yhat|)
 
     max_deviation = max(sub_vec_abs(validation_y,aprox_y))
-    print("Maximun Deviation: ",max_deviation)
+    print("Maximum Deviation: ",max_deviation)
 
     # criteria: mean absolute deviation -- average(|y-yhat|)
+
     mean_abs_deviation = mean(sub_vec_abs(validation_y,aprox_y))
     print("Mean absolute deviation: ",mean_abs_deviation)
 
-
     # criteria: mean square error -- average(y-yhat)^2
+
     mean_sq_error = mean(np.power(sub_vec(validation_y,aprox_y),2))
     print("Mean Square Error: ",mean_sq_error)
 
