@@ -8,8 +8,8 @@ Authors:
 """
 
 import pandas as pd
-from project_1 import * # main file
-from plots import *
+from project_1 import * # contains linear regression algorithm and his functions.
+from plots import * # contains tools for graphics.
 
 def get_samples_DeCock(df, cols, force=True):
     """Return training and validation data samples using pandas's
@@ -110,6 +110,13 @@ def read_file(filename):
         print("File couldn't be read")
         sys.exit(-1)
 
+"""
+Description: gets information about two datasets.
+
+Parameters:
+    @param filename1: name of de dataset file.
+    @param filename2: name of de dataset file.
+"""
 def read_dataset(filename1, filename2):
     data_1 = []
     data_2 = []
@@ -147,6 +154,13 @@ def read_dataset(filename1, filename2):
 
     return data_1, data_2
 
+"""
+Description: normalizes datasets.
+
+Parameters:
+    @param data1: dataset to be normalized.
+    @param data2: dataset to be normalized.
+"""
 def norm_ames(data1, data2):
     media=[1]
     varianza=[1]
@@ -180,6 +194,13 @@ def norm_ames(data1, data2):
 
     return data1, data2
 
+
+"""
+Description: calculates the mean.
+
+Parameters:
+    @param x: values.
+"""
 def mean(x):
     aux=0
 
@@ -189,7 +210,7 @@ def mean(x):
     return aux/len(x)
 
 """
-Description: subtracts two vectors.
+Description: subtracts two vectors and return absolute value.
 
 Parameters:
     @param a: a vector.
@@ -201,6 +222,17 @@ def sub_vec_abs(a,b):
         c.append(abs(a[i]-b[i]))
     return c
 
+def jota_validation(thetas,x,y):
+    aux=[]
+
+    for i in range(len(thetas)):
+        aux.append(jfunc(thetas[i],x,y))
+
+    return aux
+
+"""
+Description: main.
+"""
 def init():
     df = read_file("ww2.amstat.org.txt")
 
@@ -246,10 +278,18 @@ def init():
 
     training_norm, validation_norm  = norm_ames(training,validation)
 
-    results_training, jota_t = gradient_descent(0.1,training_norm,training_y,200)
+    results_training, jota_t, thetas = gradient_descent(0.1,training_norm,training_y,1200)
+    
+    # Comparation between mean square error of validation data and training data
+    jota_valid = jota_validation(thetas,validation_norm,validation_y)
     iterations = np.arange(len(jota_t))
+    iterations2 = np.arange(len(jota_valid))
     plotNormal(iterations, jota_t,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
-    plt.show()
+    plotNormal(iterations2, jota_valid,"Iteraciones", "J()", "Curva de Convergencia","#6A0888")
+
+    legend1 = mpatches.Patch(color="#0174DF",label="Datos de entrenamiento")
+    legend2 = mpatches.Patch(color="#6A0888",label="Error cuadratico medio de los datos de validacion")
+    plt.legend(handles=[legend1, legend2])
     
     # d) Model Assesing under training and validation data
 
@@ -276,6 +316,8 @@ def init():
     # criteria: mean square error -- average(y-yhat)^2
     mean_sq_error = mean(np.power(sub_vec(validation_y,aprox_y),2))
     print("Mean Square Error: ",mean_sq_error)
+
+    plt.show()
 
 if __name__ == '__main__':
     init()

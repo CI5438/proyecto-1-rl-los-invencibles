@@ -164,15 +164,17 @@ def gradient_descent(alpha,x,y,max_it):
 	theta_old=[]
 	theta_new=[]
 	jota=[]
+	thetas=[]
 	epsilon=10**-3
 	k=0
 	
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
 		theta_new.append(1)
-
+	
 	jota.append(jfunc(theta_new,x,y))
-	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
+	
+	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): 
 		
 		for i in range(len(x[0])):
 			theta_old[i] = theta_new[i]
@@ -184,15 +186,20 @@ def gradient_descent(alpha,x,y,max_it):
 				plus+=(h(theta_old, x[j])-y[j])*x[j][i]
 			theta_new[i]=theta_old[i]-(alpha*(1/len(x))*plus)
 		jota.append(jfunc(theta_new,x,y))
-
-		print(k)
-		print("Costo: ",jfunc(theta_new,x,y))
 		
+		aux=[]
+		
+		for i in range(len(theta_new)):
+			aux.append(theta_new[i])
+		thetas.append(aux)
+		
+		print(k)
+
 		k+=1
 	
 	#Theta values and iterations
-	for i in range(len(theta_new)):
-		print("Theta ", i, ": ", theta_new[i])
-	print("k: ", k)
+	# for i in range(len(theta_new)):
+	# 	print("Theta ", i, ": ", theta_new[i])
+	# print("k: ", k)
 
-	return theta_new, jota
+	return theta_new, jota, thetas

@@ -10,7 +10,7 @@ Authors:
 import matplotlib.pyplot as plt # useful for tools for graphics.
 import matplotlib.patches as mpatches # useful tools for graphics.
 import numpy as np # useful for arrays
-from project_1 import * # main file
+from project_1 import * # contains linear regression algorithm and his functions.
 
 """
 Description: graphics a scatter and a plot with some details.
@@ -59,7 +59,7 @@ def init_plots():
 
 	# # # Without normalized the data -------------------------------------------------
 
-	results1, jota = gradient_descent(0.001,x,y,10)
+	results1, jota, thetas1 = gradient_descent(0.001,x,y,10)
 
 	# # # # # Question a) -----------------------------------------------------------------
 
@@ -70,7 +70,7 @@ def init_plots():
 	# # # Normalized data -------------------------------------------------------------
 
 	x_norm = norm(x)
-	results2, jota = gradient_descent(0.001,x_norm,y,20000)
+	results2, jota, thetas2 = gradient_descent(0.001,x_norm,y,20000)
 
 	# # # Question a) -----------------------------------------------------------------
 
@@ -98,7 +98,7 @@ def init_plots():
 
 	# # Question a) -----------------------------------------------------------------
 
-	results3, jota2 = gradient_descent(0.001,x2,y2,5)
+	results3, jota2, thetas3 = gradient_descent(0.001,x2,y2,5)
 	iterations2 = np.arange(len(jota2))
 
 	plotNormal(iterations2, jota2,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
@@ -112,7 +112,7 @@ def init_plots():
 	colors = ["#A4243B","#0174DF","#6A0888","#74DF00","#FF8000","#FFFF00"]
 
 	for i in range(0,len(alphas)):
-		results4, jota4 = gradient_descent(alphas[i],x2_norm,y2,20000)
+		results4, jota4, thetas4 = gradient_descent(alphas[i],x2_norm,y2,20000)
 		iterations3 = np.arange(len(jota4))
 		plotNormal(iterations3, jota4,"Iteraciones", "J()", "Curva de Convergencia",colors[c])
 		c += 1
