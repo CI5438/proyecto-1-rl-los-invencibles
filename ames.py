@@ -7,12 +7,19 @@ Authors:
     Fabiola Martinez 1310838
 """
 
+import sys
+
+import numpy as np
 import pandas as pd
-from project_1 import * # main file
-from plots import *
+
+import matplotlib.pyplot as plt
+from plots import plotNormal
+from project_1 import gradient_descent, h, sub_vec  # main file
+
 
 def get_samples_DeCock(df, cols, force=True):
-    """Return training and validation data samples using pandas's
+    """
+    Return training and validation data samples using pandas's
     random sampling and Dean De Cock suggested method.
 
     De Cock states the following:
@@ -26,7 +33,7 @@ def get_samples_DeCock(df, cols, force=True):
     of variables (included), when false, the lower limit is the number
     of variables.
 
-    NOTE: This function could be improved by relaxing the min_val_size within an 
+    NOTE: This function could be improved by relaxing the min_validation_size within an 
     interval.
     """
     max_factor = 10
@@ -61,17 +68,20 @@ def get_samples_DeCock(df, cols, force=True):
 
 
 def fix_missing_with_mode(df):
-    """Fixes missing value from all columns using the mode.
+    """
+    Fixes missing value from all columns using the mode.
     """
     return df.fillna(df.mode().iloc[0])
 
 def only_rows_from_numeric_gte_column_value(df, column, value):
-    """Remove from dataframe rows whose 'column' value is not >= 'value'
+    """
+    Remove from dataframe rows whose 'column' value is not >= 'value'
     """
     return df.loc[df[column] >= value]
 
 def drop_column(df, column):
-    """Drop from dataframe 'column'
+    """
+    Drop from dataframe 'column'
     """
     try:
         df = df.drop(column, axis=1)
@@ -81,7 +91,8 @@ def drop_column(df, column):
     return df
 
 def only_rows_from_categorical_column_value(df, column, value):
-    """Remove rows from dataframe.
+    """
+    Remove rows from dataframe.
 
     Remaining dataframe will have ONLY rows whose column 'column' 
     has value 'value'
@@ -89,20 +100,18 @@ def only_rows_from_categorical_column_value(df, column, value):
     return df.loc[df[column] == value]
 
 def dummies(df):
-    """Get dummies variables for categorical data.
-    
-    :param: dataframe
-    :return: dataframe
+    """
+    Get dummies variables for categorical data.
     """
     return pd.get_dummies(df)
 
 def read_file(filename):
-    """Reads file and process it using panda dataframes.
-    
-    :param: name of the file
-    :return: dataframe
     """
-
+    Reads file and process it using panda dataframes.
+    
+    @param name of the file
+    @return dataframe
+    """
     try:
         df = pd.read_csv(filename)
         return df
@@ -181,21 +190,22 @@ def norm_ames(data1, data2):
     return data1, data2
 
 def mean(x):
-    aux=0
+    acum=0
 
     for i in range(len(x)):
-        aux+=x[i]
+        acum+=x[i]
 
-    return aux/len(x)
+    return acum/len(x)
 
-"""
-Description: subtracts two vectors.
 
-Parameters:
-    @param a: a vector.
-    @param b: a vector.
-"""
 def sub_vec_abs(a,b):
+    """
+    Description: subtracts two vectors.
+
+    Parameters:
+        @param a: a vector.
+        @param b: a vector.
+    """
     c=[]
     for i in range (0,len(a)):
         c.append(abs(a[i]-b[i]))
@@ -223,10 +233,10 @@ def init():
     # c) Data splitting
     df_training, df_validation = get_samples_DeCock(df, cols)
 
-    # b) Data normalization
     df_training.to_csv("amstat_training.txt")
     df_validation.to_csv("amstat_validation.txt")
-    
+
+    # b) Data normalization    
     training, validation = read_dataset("amstat_training.txt", "amstat_validation.txt")
         
     training_y = []
@@ -243,11 +253,13 @@ def init():
         del(validation[i][36])
 
     # Normalizes the data
-
     training_norm, validation_norm  = norm_ames(training,validation)
 
+    # Gradient Descent
     results_training, jota_t = gradient_descent(0.1,training_norm,training_y,200)
     iterations = np.arange(len(jota_t))
+    
+    # Plotting
     plotNormal(iterations, jota_t,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
     plt.show()
     
@@ -263,7 +275,7 @@ def init():
     bias = mean(sub_vec(aprox_y,validation_y))
     print("Bias: ",bias)
 
-    # criteria: maximun deviation -- max(|y-yhat|)
+    # criteria: maximum deviation -- max(|y-yhat|)
 
     max_deviation = max(sub_vec_abs(validation_y,aprox_y))
     print("Maximun Deviation: ",max_deviation)
