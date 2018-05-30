@@ -85,7 +85,8 @@ def norm(x):
 	
 	for i in range(1,len(x[0])):
 		for j in range(len(x)):
-			x[j][i]=(x[j][i]-media[i])/varianza[i]
+			if varianza[i] != 0:
+				x[j][i]=(x[j][i]-media[i])/varianza[i]
 
 	# Data normalized
 	# for i in range(len(x)):	
@@ -155,17 +156,20 @@ Description: gradient descent algorithm.
 
 Parameters:
 	@param alpha: learning rate.
+	@param x: values of dataset variable.
+	@param y: values of dataset variable.
+	@param max_it: maximun number of iterations
 """
 def gradient_descent(alpha,x,y,max_it):
 	theta_old=[]
 	theta_new=[]
 	jota=[]
-	epsilon=10**-2
+	epsilon=10**-3
 	k=0
 	
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
-		theta_new.append(0)
+		theta_new.append(1)
 
 	jota.append(jfunc(theta_new,x,y))
 	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
@@ -182,6 +186,7 @@ def gradient_descent(alpha,x,y,max_it):
 		jota.append(jfunc(theta_new,x,y))
 
 		print(k)
+		print("Costo: ",jfunc(theta_new,x,y))
 		
 		k+=1
 	

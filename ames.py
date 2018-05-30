@@ -122,8 +122,10 @@ def read_dataset(filename1, filename2):
         if k == 0:
             k+=1
             continue
-        word = line.split(",")  
-        data_1.append(word[1:len(word)-1])
+        word = line.split(",")
+        word[0]=1  
+        # data_1.append(1)
+        data_1.append(word[0:len(word)-1])
 
     k = 0
 
@@ -132,7 +134,8 @@ def read_dataset(filename1, filename2):
             k+=1
             continue
         word = line.split(",")
-        data_2.append(word[1:len(word)-1])
+        word[0]=1
+        data_2.append(word[0:len(word)-1])
 
     for i in range(len(data_1)):
         for j in range(len(data_1[i])):
@@ -177,6 +180,27 @@ def norm_ames(data1, data2):
 
     return data1, data2
 
+def mean(x):
+    aux=0
+
+    for i in range(len(x)):
+        aux+=x[i]
+
+    return aux/len(x)
+
+"""
+Description: subtracts two vectors.
+
+Parameters:
+    @param a: a vector.
+    @param b: a vector.
+"""
+def sub_vec_abs(a,b):
+    c=[]
+    for i in range (0,len(a)):
+        c.append(abs(a[i]-b[i]))
+    return c
+
 def init():
     df = read_file("ww2.amstat.org.txt")
 
@@ -203,19 +227,8 @@ def init():
     df_training.to_csv("amstat_training.txt")
     df_validation.to_csv("amstat_validation.txt")
     
-    
-    # d) Model Assesing under training and validation data
-
-    # criteria: bias -- average(yhat - y)
-
-    # criteria: maximun deviation -- max(|y-yhat|)
-
-    # criteria: mean absolute deviation -- average(|y-yhat|)
-
-    # criteria: mean square error -- average(y-yhat)^2
-
     training, validation = read_dataset("amstat_training.txt", "amstat_validation.txt")
-    
+        
     training_y = []
     validation_y = []
     
@@ -229,19 +242,40 @@ def init():
         validation_y.append(validation[i][36])
         del(validation[i][36])
 
-    # Normalizes the data 
+    # Normalizes the data
+
     training_norm, validation_norm  = norm_ames(training,validation)
 
-    results_training, jota_t = gradient_descent(0.001,training,training_y,5000)
+    results_training, jota_t = gradient_descent(0.1,training_norm,training_y,200)
     iterations = np.arange(len(jota_t))
     plotNormal(iterations, jota_t,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
     plt.show()
+    
+    # d) Model Assesing under training and validation data
 
-    # for i in range(len(training_norm)):
-    #     print(training_norm[i])
-    # print("VALIDATION ---------")
-    # for i in range(len(validation_norm)):
-    #     print(validation_norm[i])
+    # criteria: bias -- average(yhat - y)
+
+    aprox_y = []
+
+    for i in range(len(validation_norm)):
+        aprox_y.append(h(results_training,validation_norm[i]))
+
+    bias = mean(sub_vec(aprox_y,validation_y))
+    print("Bias: ",bias)
+
+    # criteria: maximun deviation -- max(|y-yhat|)
+
+    max_deviation = max(sub_vec_abs(validation_y,aprox_y))
+    print("Maximun Deviation: ",max_deviation)
+
+    # criteria: mean absolute deviation -- average(|y-yhat|)
+    mean_abs_deviation = mean(sub_vec_abs(validation_y,aprox_y))
+    print("Mean absolute deviation: ",mean_abs_deviation)
+
+
+    # criteria: mean square error -- average(y-yhat)^2
+    mean_sq_error = mean(np.power(sub_vec(validation_y,aprox_y),2))
+    print("Mean Square Error: ",mean_sq_error)
 
 if __name__ == '__main__':
     init()
