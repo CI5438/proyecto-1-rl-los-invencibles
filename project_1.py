@@ -13,15 +13,6 @@ import math # useful for mathematical operators
 import sys
 import random  # useful for random function
 
-theta = [0,0]
-features = []
-x = []
-y = []
-global jota
-jota = []
-columns = 0
-k = 0
-max_it=3
 
 """
 Description: gets information about dataset.
@@ -30,12 +21,13 @@ Parameters:
 	@param filename: name of de dataset file.
 """
 def read_dataset(filename):
-	del x[:]
-	del y[:]
-	dataset = open(filename, "r")
-
+	x = []
+	y = []
+	features = []
 	i=0
-	#columns=0
+	columns=0
+
+	dataset = open(filename, "r")
 
 	for line in dataset:
 		word = line.split()
@@ -44,10 +36,9 @@ def read_dataset(filename):
 			i+=1
 			if i == 1:
 				columns = int(word[0])
-				# print(columns)
+			
 			elif i == 2:
 				rows = int(word[0])
-				#print(rows)
 					
 				for j in range(columns):
 					line = next(dataset)
@@ -69,40 +60,28 @@ def read_dataset(filename):
 	# 	print(y[i])
 	# print(" ")
 
+	return x, y
+
 """
 Description: normalizes the data.
+Parameters:
+	@param x: data to normalizes.
 """
-def norm():
+def norm(x):
 	media=[1]
-	media_y=0
-	varianza_y=0
+	varianza=[1]
 	
 	for i in range(1,len(x[0])):
 		aux=0
 		for j in range(len(x)):
 			aux+=x[j][i]
 		media.append(aux/len(x))
-
-	aux=0
-	for j in range(len(y)):
-		aux+=y[j]
-	media_y=aux/len(y)
-
-	print("Media: ", media[1])
-	varianza=[1]
 	
 	for i in range(1,len(x[0])):
 		aux=0
 		for j in range(len(x)):
 			aux+=(x[j][i]-media[i])**2
 		varianza.append((aux/(len(x)-1))**(1/2))
-
-	aux=0
-	for j in range(len(y)):
-		aux+=(y[j]-media_y)**2
-	varianza_y=(aux/(len(y)-1))**(1/2)
-
-	print("varianza: ", varianza[1])
 	
 	for i in range(1,len(x[0])):
 		for j in range(len(x)):
@@ -115,6 +94,8 @@ def norm():
 	# 		print(x[i][j], end=' ')
 	# 	print(y[i])
 	# print(" ")
+
+	return x
 
 """
 Description: calculates the derived cost function..
@@ -138,7 +119,7 @@ Parameters:
 	@param x: values of dataset variable.
 	@param y: values of dataset variable.
 """
-def jfunc(theta):
+def jfunc(theta,x,y):
 	plus=0
 	for i in range(0, len(x)):
 		plus += (h(theta, x[i]) - y[i])**2
@@ -175,18 +156,18 @@ Description: gradient descent algorithm.
 Parameters:
 	@param alpha: learning rate.
 """
-def gradient_descent(alpha):
+def gradient_descent(alpha,x,y,max_it):
 	theta_old=[]
 	theta_new=[]
-	epsilon=10**-3
+	jota=[]
+	epsilon=10**-2
 	k=0
-	del jota[:]
-
+	
 	for i in range(len(x[0])):
 		theta_old.append(random.random()*100)
-		theta_new.append(50)
+		theta_new.append(0)
 
-	jota.append(jfunc(theta_new))
+	jota.append(jfunc(theta_new,x,y))
 	while(norm2(sub_vec(theta_new,theta_old))>epsilon and k<max_it): #condicion de convergencia
 		
 		for i in range(len(x[0])):
@@ -198,13 +179,15 @@ def gradient_descent(alpha):
 			for j in range (0, len(x)):
 				plus+=(h(theta_old, x[j])-y[j])*x[j][i]
 			theta_new[i]=theta_old[i]-(alpha*(1/len(x))*plus)
-		jota.append(jfunc(theta_new))
+		jota.append(jfunc(theta_new,x,y))
+
+		print(k)
 		
 		k+=1
 	
-	# Theta values and iterations
-	# for i in range(len(theta_new)):
-	# 	print("Theta ", i, ": ", theta_new[i])
+	#Theta values and iterations
+	for i in range(len(theta_new)):
+		print("Theta ", i, ": ", theta_new[i])
 	print("k: ", k)
 
-	return theta_new
+	return theta_new, jota

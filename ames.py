@@ -1,5 +1,15 @@
+"""
+Universidad Simon Bolivar
+Artificial Intelligence II - CI5438
+Authors:
+    David Cabeza 1310191
+    Rafael Blanco 1310156
+    Fabiola Martinez 1310838
+"""
+
 import pandas as pd
-import sys
+from project_1 import * # main file
+from plots import *
 
 def get_samples_DeCock(df, cols, force=True):
     """Return training and validation data samples using pandas's
@@ -113,7 +123,7 @@ def read_dataset(filename1, filename2):
             k+=1
             continue
         word = line.split(",")  
-        data_1.append(word[1:])
+        data_1.append(word[1:len(word)-1])
 
     k = 0
 
@@ -122,40 +132,48 @@ def read_dataset(filename1, filename2):
             k+=1
             continue
         word = line.split(",")
-        data_2.append(word[1:])
-        
-    print(len(columns[0]))
-    for i in range(len(columns)):
-        print(columns[i])
+        data_2.append(word[1:len(word)-1])
 
-def norm(data1, data2):
+    for i in range(len(data_1)):
+        for j in range(len(data_1[i])):
+            data_1[i][j] = float(data_1[i][j])
+
+    for i in range(len(data_2)):
+        for j in range(len(data_2[i])):
+            data_2[i][j] = float(data_2[i][j])
+
+    return data_1, data_2
+
+def norm_ames(data1, data2):
     media=[1]
     varianza=[1]
     
     for i in range(1,len(data1[0])):
         aux=0
         for j in range(len(data1)):
-            aux+=data1[j][i]
+            aux+=float(data1[j][i])
 
         for j in range(len(data2)):
-            aux+=data2[j][i]
+            aux+=float(data2[j][i])
         
         media.append(aux/len(data1+data2))
     
     for i in range(1,len(data1[0])):
         aux=0
         for j in range(len(data1)):
-            aux+=(data1[j][i]-media[i])**2
+            aux+=(float(data1[j][i])-media[i])**2
 
         for j in range(len(data2)):
-            aux+=(data2[j][i]-media[i])**2
+            aux+=(float(data2[j][i])-media[i])**2
         varianza.append((aux/(len(data2+data1)-1))**(1/2))
     
     for i in range(1,len(data1[0])):
         for j in range(len(data1)):
-            data1[j][i]=(data1[j][i]-media[i])/varianza[i]
+            if varianza[i] != 0:
+                data1[j][i]=(float(data1[j][i])-media[i])/varianza[i]
         for j in range(len(data2)):
-            data2[j][i]=(data2[j][i]-media[i])/varianza[i]
+            if varianza[i] != 0:
+                data2[j][i]=(float(data2[j][i])-media[i])/varianza[i]
 
     return data1, data2
 
@@ -195,6 +213,35 @@ def init():
     # criteria: mean absolute deviation -- average(|y-yhat|)
 
     # criteria: mean square error -- average(y-yhat)^2
+
+    training, validation = read_dataset("amstat_training.txt", "amstat_validation.txt")
+    
+    training_y = []
+    validation_y = []
+    
+    # Gets vector y of training data
+    for i in range(len(training)):
+        training_y.append(training[i][36])
+        del(training[i][36])
+
+    # Gets vector y of validation data
+    for i in range(len(validation)):
+        validation_y.append(validation[i][36])
+        del(validation[i][36])
+
+    # Normalizes the data 
+    training_norm, validation_norm  = norm_ames(training,validation)
+
+    results_training, jota_t = gradient_descent(0.001,training,training_y,5000)
+    iterations = np.arange(len(jota_t))
+    plotNormal(iterations, jota_t,"Iteraciones", "J()", "Curva de Convergencia","#0174DF")
+    plt.show()
+
+    # for i in range(len(training_norm)):
+    #     print(training_norm[i])
+    # print("VALIDATION ---------")
+    # for i in range(len(validation_norm)):
+    #     print(validation_norm[i])
 
 if __name__ == '__main__':
     init()
