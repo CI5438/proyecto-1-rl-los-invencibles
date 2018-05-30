@@ -100,6 +100,65 @@ def read_file(filename):
         print("File couldn't be read")
         sys.exit(-1)
 
+def read_dataset(filename1, filename2):
+    data_1 = []
+    data_2 = []
+    k = 0
+
+    data_training = open(filename1, "r")
+    data_validation = open(filename2, "r")
+
+    for line in data_training:
+        if k == 0:
+            k+=1
+            continue
+        word = line.split(",")  
+        data_1.append(word[1:])
+
+    k = 0
+
+    for line in data_validation:
+        if k == 0:
+            k+=1
+            continue
+        word = line.split(",")
+        data_2.append(word[1:])
+        
+    print(len(columns[0]))
+    for i in range(len(columns)):
+        print(columns[i])
+
+def norm(data1, data2):
+    media=[1]
+    varianza=[1]
+    
+    for i in range(1,len(data1[0])):
+        aux=0
+        for j in range(len(data1)):
+            aux+=data1[j][i]
+
+        for j in range(len(data2)):
+            aux+=data2[j][i]
+        
+        media.append(aux/len(data1+data2))
+    
+    for i in range(1,len(data1[0])):
+        aux=0
+        for j in range(len(data1)):
+            aux+=(data1[j][i]-media[i])**2
+
+        for j in range(len(data2)):
+            aux+=(data2[j][i]-media[i])**2
+        varianza.append((aux/(len(data2+data1)-1))**(1/2))
+    
+    for i in range(1,len(data1[0])):
+        for j in range(len(data1)):
+            data1[j][i]=(data1[j][i]-media[i])/varianza[i]
+        for j in range(len(data2)):
+            data2[j][i]=(data2[j][i]-media[i])/varianza[i]
+
+    return data1, data2
+
 def init():
     df = read_file("ww2.amstat.org.txt")
 
@@ -136,7 +195,6 @@ def init():
     # criteria: mean absolute deviation -- average(|y-yhat|)
 
     # criteria: mean square error -- average(y-yhat)^2
-
 
 if __name__ == '__main__':
     init()
